@@ -30,14 +30,7 @@ SIGNATURES = [
     
    
     },
-    {
-    "name": "PowerShell Script Execution Pattern (IEX)",
     
-    "pattern": b"IEX",
-    
-    "severity": "HIGH"
-    
-    },
     {
     "name": "EncodedCommand Usage",
     "pattern": b"-enc",
