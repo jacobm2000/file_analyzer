@@ -50,8 +50,14 @@ SIGNATURES = [
     }
 ]
 
-
-
+def sig_to_sting(sigs):
+    output_string=""
+    for sig in sigs:
+        name=sig["name"]
+        pattern=sig["pattern"]
+        severity=sig["severity"]
+        output_string+=f"{name}| Pattern:{pattern}| Severity:{severity}\n\n"
+    return output_string
 def sig_check(file):
     matches=[]
     with open(file, "rb") as f:
@@ -63,4 +69,4 @@ def sig_check(file):
     if len(matches)==0:
         return "nothing found"
     else:
-        return matches
+        return sig_to_sting(matches)

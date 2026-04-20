@@ -1,10 +1,12 @@
 import sys
 import os
 import funcs
+from PyQt5 import QtCore
 from PyQt5.QtWidgets import (
     QApplication, QWidget, QVBoxLayout,
     QPushButton, QLabel, QFileDialog
 )
+from PyQt5.QtCore import Qt
 
 class SimpleScanner(QWidget):
     def __init__(self):
@@ -19,6 +21,7 @@ class SimpleScanner(QWidget):
 
         # Label
         self.label = QLabel("No file selected")
+        self.label.setAlignment(QtCore.Qt.AlignCenter)
         layout.addWidget(self.label)
 
         # Load file button
@@ -43,12 +46,12 @@ class SimpleScanner(QWidget):
         if not self.file_path:
             self.label.setText("No file selected!")
             return
-
+        
         scan_output=funcs.sig_check(self.file_path)
         file_size = os.path.getsize(self.file_path)
-
+       
         self.label.setText(
-            f"Scanned: {os.path.basename(self.file_path)} | Size: {file_size} bytes \n\n {scan_output}"
+            f"Scanned: {os.path.basename(self.file_path)} | Size: {file_size} bytes \n\n Results\n\n {scan_output}"
         )
 
 if __name__ == "__main__":
