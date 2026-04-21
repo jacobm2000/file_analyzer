@@ -1,45 +1,52 @@
 SIGNATURES = [
+  
     {
-        "name": "Suspicious PowerShell",
-        "pattern": b"powershell -enc",
-        "severity": "HIGH"
+        "name": "PowerShell Execution",
+        "pattern": b"powershell",
+        "severity": "MEDIUM",
+        "category": "execution"
     },
     {
-        "name": "Command Execution",
-        "pattern": b"cmd.exe",
-        "severity": "MEDIUM"
+        "name": "CMD Execution",
+        "pattern": b"cmd /c",
+        "severity": "MEDIUM",
+        "category": "execution"
     },
+
+  
     {
-        "name": "Download Cradle",
+        "name": "PowerShell Web Download",
         "pattern": b"Invoke-WebRequest",
-        "severity": "HIGH"
+        "severity": "MEDIUM",
+        "category": "download"
     },
     {
-    "name": "Suspicious WMI Process Creation",
-    
-    "pattern": b"wmic process call create",
-    
-    "severity": "HIGH"
+        "name": "WebClient DownloadString",
+        "pattern": b"DownloadString",
+        "severity": "MEDIUM",
+        "category": "download"
     },
+
+ 
     {
-    "name": "PowerShell Remote Download (WebClient)",
-    
-    "pattern": b"DownloadString",
-    
-    "severity": "HIGH",
-    
+        "name": "WMI Process Creation",
+        "pattern": b"wmic process call create",
+        "severity": "HIGH",
+        "category": "lolbin"
+    },
+
    
-    },
-    
     {
-    "name": "EncodedCommand Usage",
-    "pattern": b"-enc",
-    "severity": "HIGH"
+        "name": "Encoded PowerShell Command",
+        "pattern": b"-EncodedCommand",
+        "severity": "HIGH",
+        "category": "obfuscation"
     },
     {
-    "name": "Scripted Execution Chain (CMD → PowerShell)",
-    "pattern": b"cmd /c",
-    "severity": "MEDIUM"
+        "name": "Base64 Decode Usage",
+        "pattern": b"FromBase64String",
+        "severity": "HIGH",
+        "category": "obfuscation"
     }
 ]
 
@@ -47,9 +54,9 @@ def sig_to_sting(sigs):
     output_string=""
     for sig in sigs:
         name=sig["name"]
-        pattern=sig["pattern"]
+        cat=sig["category"]
         severity=sig["severity"]
-        output_string+=f"{name}| Pattern:{pattern}| Severity:{severity}\n\n"
+        output_string+=f"{name}| category:{cat} |Severity:{severity}\n\n"
     return output_string
 def sig_check(file):
     matches=[]
