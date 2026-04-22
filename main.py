@@ -6,7 +6,9 @@ from PyQt5.QtWidgets import (
     QApplication, QWidget, QVBoxLayout,
     QPushButton, QLabel, QFileDialog
 )
-from PyQt5.QtCore import Qt
+from pathlib import Path
+
+
 
 class SimpleScanner(QWidget):
     def __init__(self):
@@ -33,7 +35,8 @@ class SimpleScanner(QWidget):
         self.scan_button = QPushButton("Scan")
         self.scan_button.clicked.connect(self.scan_file)
         layout.addWidget(self.scan_button)
-
+        
+  
         self.setLayout(layout)
 
     def load_file(self):
@@ -46,8 +49,15 @@ class SimpleScanner(QWidget):
         if not self.file_path:
             self.label.setText("No file selected!")
             return
+        scan_output=""
+        #files formats where entropy is a useful metric
+        entropy_formats = [".exe", ".dll", ".ps1", ".bat", ".js", ".vbs", ".txt", ".json"]
+ 
+        if (Path(self.file_path).suffix in entropy_formats):    
+            entropy=funcs.file_entropy(self.file_path)
+            scan_output+=f"Entropy:{entropy}\n\n"
+        scan_output+=funcs.sig_check(self.file_path)
         
-        scan_output=funcs.sig_check(self.file_path)
         file_size = os.path.getsize(self.file_path)
        
         self.label.setText(

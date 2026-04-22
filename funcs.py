@@ -1,3 +1,5 @@
+import math
+
 SIGNATURES = [
   
     {
@@ -49,6 +51,36 @@ SIGNATURES = [
         "category": "obfuscation"
     }
 ]
+
+
+
+def file_entropy(file_path: str, chunk_size=4096):
+    byte_counts = [0] * 256
+    total = 0
+
+    with open(file_path, "rb") as f:
+        while chunk := f.read(chunk_size):
+            total += len(chunk)
+            for b in chunk:
+                byte_counts[b] += 1
+
+    if total == 0:
+        return 0.0
+
+    entropy = 0.0
+    for count in byte_counts:
+        if count == 0:
+            continue
+        p = count / total
+        entropy -= p * math.log2(p)
+    level=""
+    if entropy>=7.0:
+        level="High"
+    elif(entropy>=6.5):
+        level="Moderate"
+    else:
+        level="Low"
+    return str(round(entropy,2))+" | " +level
 
 def sig_to_sting(sigs):
     output_string=""
