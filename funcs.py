@@ -74,7 +74,7 @@ def file_entropy(file_path: str, chunk_size=4096):
         p = count / total
         entropy -= p * math.log2(p)
     level=""
-    if entropy>=7.0:
+    if entropy>=7.5:
         level="High"
     elif(entropy>=6.5):
         level="Moderate"
@@ -82,7 +82,7 @@ def file_entropy(file_path: str, chunk_size=4096):
         level="Low"
     return str(round(entropy,2))+" | " +level
 
-def sig_to_sting(sigs):
+def sig_to_string(sigs):
     output_string=""
     for sig in sigs:
         name=sig["name"]
@@ -101,4 +101,4 @@ def sig_check(file):
     if len(matches)==0:
         return "nothing found"
     else:
-        return sig_to_sting(matches)
+        return sig_to_string(matches)
