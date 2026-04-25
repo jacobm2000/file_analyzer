@@ -53,7 +53,14 @@ SIGNATURES = [
 ]
 
 
-
+def entropy_level(entropy):
+      if entropy>=7.5:
+        level="High"
+      elif(entropy>=6.5):
+        level="Moderate"
+      else:
+        level="Low"
+      return level
 def file_entropy(file_path: str, chunk_size=4096):
     byte_counts = [0] * 256
     total = 0
@@ -73,14 +80,7 @@ def file_entropy(file_path: str, chunk_size=4096):
             continue
         p = count / total
         entropy -= p * math.log2(p)
-    level=""
-    if entropy>=7.5:
-        level="High"
-    elif(entropy>=6.5):
-        level="Moderate"
-    else:
-        level="Low"
-    return str(round(entropy,2))+" | " +level
+    return round(entropy,2)
 
 def sig_to_string(sigs):
     output_string=""

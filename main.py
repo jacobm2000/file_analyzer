@@ -55,7 +55,8 @@ class SimpleScanner(QWidget):
  
         if (Path(self.file_path).suffix in entropy_formats):    
             entropy=funcs.file_entropy(self.file_path)
-            scan_output+=f"Entropy:{entropy}\n\n"
+            entropy_level=funcs.entropy_level(entropy)
+            scan_output+=f"Entropy:{str(entropy)} | {entropy_level}\n\n"
         scan_output+=funcs.sig_check(self.file_path)
         
         file_size = os.path.getsize(self.file_path)
