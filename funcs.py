@@ -88,7 +88,7 @@ def sig_to_string(sigs):
         name=sig["name"]
         cat=sig["category"]
         severity=sig["severity"]
-        output_string+=f"{name}| category:{cat} |Severity:{severity}\n\n"
+        output_string+=f"{name}| category:{cat} |Severity:{severity}<br><br>"
     return output_string
 def sig_check(file):
     matches=[]

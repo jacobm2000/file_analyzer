@@ -15,7 +15,7 @@ class SimpleScanner(QWidget):
         super().__init__()
 
         self.setWindowTitle("Simple File Scanner")
-        self.setGeometry(300, 300, 400, 150)
+        self.setGeometry(500, 600, 600, 400)
 
         self.file_path = None
 
@@ -26,7 +26,8 @@ class SimpleScanner(QWidget):
         layout.addWidget(self.label)
         # Scrollable Results Box
         self.results_box = QTextEdit()
-        self.results_box.setReadOnly(True)      
+        self.results_box.setReadOnly(True)
+       
         layout.addWidget(self.results_box)
 
         # Load file button
@@ -52,18 +53,48 @@ class SimpleScanner(QWidget):
         if not self.file_path:
             self.label.setText("No file selected!")
             return
-        scan_output="-------------------------------Scan Results----------------------------- \n"
+        self.results_box.clear()
         #files formats where entropy is a useful metric
         entropy_formats = [".exe", ".dll", ".ps1", ".bat", ".js", ".vbs", ".txt", ".json"]
- 
-        if (Path(self.file_path).suffix in entropy_formats):    
+        file_ext=Path(self.file_path).suffix
+      
+        file_info=f"file type: {str(file_ext)}<br>"
+        file_size = os.path.getsize(self.file_path)
+        file_info+=f"file size: {str(file_size)} kB<br>"
+        if (file_ext in entropy_formats):    
             entropy=funcs.file_entropy(self.file_path)
             entropy_level=funcs.entropy_level(entropy)
-            scan_output+=f"Entropy:{str(entropy)} | {entropy_level}\n\n"
-        scan_output+=funcs.sig_check(self.file_path)
+            file_info+=f"Entropy:{str(entropy)} | {entropy_level}\n\n"
         
-        file_size = os.path.getsize(self.file_path)
-        self.results_box.setText(scan_output)
+       
+       
+ 
+        scan_output=funcs.sig_check(self.file_path)
+        
+        
+        
+        self.results_box.setHtml(f"""
+        <p style="font-size:16px; font-weight:bold; text-decoration: underline; text-align:center;">
+        File Info
+        </p>
+        
+        <p style="font-size:12px; text-align:center;">
+        {file_info}
+        </p>
+        
+         <p style="font-size:16px; font-weight:bold; text-decoration: underline; text-align:center;">
+        File Analysis
+        </p>
+        
+        <p style="font-size:12px; text-align:center;">
+        {scan_output}
+        </p>
+        """
+        )
+    
+       
+        
+   
       
 
 if __name__ == "__main__":
