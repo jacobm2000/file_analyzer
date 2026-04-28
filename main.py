@@ -60,7 +60,7 @@ class SimpleScanner(QWidget):
       
         file_info=f"file type: {str(file_ext)}<br>"
         file_size = os.path.getsize(self.file_path)
-        file_info+=f"file size: {str(file_size)} kB<br>"
+        file_info+=f"file size: {str(file_size)} Bytes<br>"
         if (file_ext in entropy_formats):    
             entropy=funcs.file_entropy(self.file_path)
             entropy_level=funcs.entropy_level(entropy)
