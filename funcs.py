@@ -55,11 +55,11 @@ SIGNATURES = [
 
 def entropy_level(entropy):
       if entropy>=7.5:
-        level="High"
+        level="HIGH"
       elif(entropy>=6.5):
-        level="Moderate"
+        level="MEDIUM"
       else:
-        level="Low"
+        level="LOW"
       return level
 def file_entropy(file_path: str, chunk_size=4096):
     byte_counts = [0] * 256
