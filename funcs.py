@@ -1,6 +1,26 @@
 import math
 
 SIGNATURES = [
+     {
+        "name": "WMI Process Creation",
+        "pattern": b"wmic process call create",
+        "severity": "HIGH",
+        "category": "lolbin"
+    },
+
+   
+    {
+        "name": "Encoded PowerShell Command",
+        "pattern": b"-EncodedCommand",
+        "severity": "HIGH",
+        "category": "obfuscation"
+    },
+    {
+        "name": "Base64 Decode Usage",
+        "pattern": b"FromBase64String",
+        "severity": "HIGH",
+        "category": "obfuscation"
+    },
   
     {
         "name": "PowerShell Execution",
@@ -27,29 +47,10 @@ SIGNATURES = [
         "pattern": b"DownloadString",
         "severity": "MEDIUM",
         "category": "download"
-    },
+    }
 
  
-    {
-        "name": "WMI Process Creation",
-        "pattern": b"wmic process call create",
-        "severity": "HIGH",
-        "category": "lolbin"
-    },
-
    
-    {
-        "name": "Encoded PowerShell Command",
-        "pattern": b"-EncodedCommand",
-        "severity": "HIGH",
-        "category": "obfuscation"
-    },
-    {
-        "name": "Base64 Decode Usage",
-        "pattern": b"FromBase64String",
-        "severity": "HIGH",
-        "category": "obfuscation"
-    }
 ]
 
 
@@ -90,6 +91,7 @@ def sig_to_string(sigs):
         severity=sig["severity"]
         output_string+=f"{name}| category:{cat} |Severity:{severity}<br><br>"
     return output_string
+
 def sig_check(file):
     matches=[]
     with open(file, "rb") as f:
@@ -98,7 +100,4 @@ def sig_check(file):
         if sig["pattern"] in data:
             matches.append(sig)
     
-    if len(matches)==0:
-        return "nothing found"
-    else:
-        return sig_to_string(matches)
+    return matches

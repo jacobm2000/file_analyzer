@@ -81,11 +81,14 @@ class SimpleScanner(QWidget):
         if (file_ext in entropy_formats):    
             entropy=funcs.file_entropy(self.file_path)
             entropy_level=funcs.entropy_level(entropy)
-            file_info+=f"Entropy: {str(entropy)} ({entropy_level})\n\n"
+            file_info+=f"Entropy: {str(entropy)} ({entropy_level})<br><br>"
             # color codes entropy severity
             file_info = self.color_severity(file_info)
- 
-        scan_output=funcs.sig_check(self.file_path)
+        
+        scan=funcs.sig_check(self.file_path)
+        scan_output=f"<h3>{len(scan)} detections</h3><br>"
+        scan_output+=funcs.sig_to_string(scan)
+        
         # color codes severity
         scan_output = self.color_severity(scan_output)
     
