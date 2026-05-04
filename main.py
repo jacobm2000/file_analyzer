@@ -85,9 +85,10 @@ class SimpleScanner(QWidget):
             # color codes entropy severity
             file_info = self.color_severity(file_info)
         
-        scan=funcs.sig_check(self.file_path)
+        scan=funcs.yara_check(self.file_path)
         scan_output=f"<h3>{len(scan)} detections</h3><br>"
-        scan_output+=funcs.sig_to_string(scan)
+        print(scan)
+        scan_output+=funcs.yara_to_string(scan)
         
         # color codes severity
         scan_output = self.color_severity(scan_output)
