@@ -104,6 +104,15 @@ def sig_check(file):
     return matches
 def yara_to_string(scan):
     output=""
+    for entry in scan:
+      
+        name=entry['name']
+        severity=entry['severity']
+        description=entry['description']
+        output+=f"{str(name)} | {str(severity)} | {str(description)} <br>"
+    
+    
+    return output
 def yara_check(file_path):
     matches_found = []
 

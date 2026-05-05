@@ -2,7 +2,7 @@ rule Suspicious_PowerShell_Encoded
 {
     meta:
         severity = "HIGH"
-        description = "Detects encoded PowerShell execution"
+        description = "encoded PowerShell execution"
 
     strings:
         $ps = "powershell"
@@ -17,7 +17,7 @@ rule PowerShell_DownloadString
 {
     meta:
         severity = "HIGH"
-        description = "Detects PowerShell DownloadString usage"
+        description = "PowerShell DownloadString usage"
 
     strings:
         $dl = "DownloadString"
@@ -31,7 +31,7 @@ rule WMI_Process_Creation
 {
     meta:
         severity = "HIGH"
-        description = "Detects WMI-based process creation"
+        description = "WMI-based process creation"
 
     strings:
         $wmi = "wmic process call create"
@@ -45,7 +45,7 @@ rule CMD_PowerShell_Chain
 {
     meta:
         severity = "MEDIUM"
-        description = "Detects CMD launching PowerShell"
+        description = "CMD launching PowerShell"
 
     strings:
         $cmd = "cmd /c"
@@ -55,12 +55,37 @@ rule CMD_PowerShell_Chain
         $cmd and $ps
 }
 
+rule PowerShell_ExecutionPolicy_Bypass
+{
+    meta:
+        severity = "HIGH"
+        description = "PowerShell execution policy bypass"
+
+    strings:
+        $bypass = "ExecutionPolicy Bypass"
+
+    condition:
+        $bypass
+}
+
+rule Raw_IP_URL
+{
+    meta:
+        severity = "MEDIUM"
+        description = "Direct IP-based URL"
+
+    strings:
+        $ip = /http[s]?:\/\/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/
+
+    condition:
+        $ip
+}
 
 rule Base64_Decode_Usage
 {
     meta:
         severity = "MEDIUM"
-        description = "Detects Base64 decoding functions"
+        description = "Base64 decoding functions"
 
     strings:
         $b64 = "FromBase64String"

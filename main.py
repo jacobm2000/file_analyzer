@@ -87,7 +87,6 @@ class SimpleScanner(QWidget):
         
         scan=funcs.yara_check(self.file_path)
         scan_output=f"<h3>{len(scan)} detections</h3><br>"
-        print(scan)
         scan_output+=funcs.yara_to_string(scan)
         
         # color codes severity
