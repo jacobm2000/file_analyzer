@@ -19,7 +19,7 @@ class SimpleScanner(QWidget):
         self.setGeometry(500, 600, 600, 400)
 
         self.file_path = None
-
+        self.setAcceptDrops(True)
         layout = QVBoxLayout()
 
         self.label = QLabel("No file selected")
@@ -31,21 +31,42 @@ class SimpleScanner(QWidget):
        
         layout.addWidget(self.results_box)
 
+        self.status_label = QLabel("")
+        self.status_label.setAlignment(QtCore.Qt.AlignCenter)
+        layout.addWidget(self.status_label)
 
         button_layout = QHBoxLayout()
         #  Load file button
         self.load_button = QPushButton("Load File")
         self.load_button.clicked.connect(self.load_file)
+        self.load_button.setIcon(self.style().standardIcon(QApplication.style().SP_DialogOpenButton))
         button_layout.addWidget(self.load_button)
-
+        
         # Scan button
         self.scan_button = QPushButton("Scan")
         self.scan_button.clicked.connect(self.scan_file)
+        self.scan_button.setEnabled(False)
+        self.scan_button.setIcon(self.style().standardIcon(QApplication.style().SP_MediaPlay))
         button_layout.addWidget(self.scan_button)
         
         layout.addLayout(button_layout)
         self.setLayout(layout)
-    
+        
+  
+        
+    def dragEnterEvent(self, event):
+        if event.mimeData().hasUrls():
+            event.accept()
+        else:
+            event.ignore()
+            
+    def dropEvent(self, event):
+        file_path = event.mimeData().urls()[0].toLocalFile()
+        self.file_path = file_path
+        self.label.setText(f"Loaded: {os.path.basename(file_path)}")
+        self.label.setToolTip(file_path)
+        self.scan_button.setEnabled(True)
+        
     def get_sha256(self,file_path):
         sha256 = hashlib.sha256()
     
@@ -64,12 +85,15 @@ class SimpleScanner(QWidget):
         if file_path:
             self.file_path = file_path
             self.label.setText(f"Loaded: {os.path.basename(file_path)}")
-
+            self.label.setToolTip(self.file_path)
+            self.scan_button.setEnabled(True)
     def scan_file(self):
         if not self.file_path:
             self.label.setText("No file selected!")
             return
         self.results_box.clear()
+        self.status_label.setText("Scanning...")
+        QApplication.processEvents()
         #files formats where entropy is a useful metric
         entropy_formats = [".exe", ".dll", ".ps1", ".bat", ".js", ".vbs", ".txt", ".json"]
         file_hash=self.get_sha256(self.file_path)
@@ -85,9 +109,9 @@ class SimpleScanner(QWidget):
             # color codes entropy severity
             file_info = self.color_severity(file_info)
         
-        scan=funcs.sig_check(self.file_path)
+        scan=funcs.yara_check(self.file_path)
         scan_output=f"<h3>{len(scan)} detections</h3><br>"
-        scan_output+=funcs.sig_to_string(scan)
+        scan_output+=funcs.yara_to_string(scan)
         
         # color codes severity
         scan_output = self.color_severity(scan_output)
@@ -111,7 +135,7 @@ class SimpleScanner(QWidget):
         </p>
         """
         )
-    
+        self.status_label.setText("Scan complete")
        
         
    

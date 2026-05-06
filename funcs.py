@@ -1,4 +1,5 @@
 import math
+import yara
 
 SIGNATURES = [
      {
@@ -101,3 +102,36 @@ def sig_check(file):
             matches.append(sig)
     
     return matches
+def yara_to_string(scan):
+    output=""
+    for entry in scan:
+      
+        name=entry['name']
+        severity=entry['severity']
+        description=entry['description']
+        output+=f"{str(name)} | {str(severity)} | {str(description)} <br>"
+    
+    
+    return output
+def yara_check(file_path):
+    matches_found = []
+
+    # Load YARA rules
+    rules = yara.compile(filepath="rules.yar")
+
+    # Scan file
+    matches = rules.match(file_path)
+
+    # Convert matches into similar structure as sig_check
+    for match in matches:
+        matches_found.append({
+            "name": match.rule,
+            "severity": match.meta.get("severity", "UNKNOWN"),
+            "description": match.meta.get(
+                "description",
+                "No description provided"
+            ),
+            "tags": match.tags
+        })
+
+    return matches_found
