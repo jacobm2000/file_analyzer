@@ -3,8 +3,9 @@ import os
 import funcs
 import hashlib
 from PyQt5 import QtCore
+from PyQt5.QtGui import QFont 
 from PyQt5.QtWidgets import (
-    QApplication, QWidget, QVBoxLayout,
+    QApplication,QWidget, QVBoxLayout,
     QPushButton, QLabel, QFileDialog,QTextEdit,QHBoxLayout
 )
 from pathlib import Path
@@ -17,13 +18,14 @@ class SimpleScanner(QWidget):
 
         self.setWindowTitle("Simple File Scanner")
         self.setGeometry(500, 600, 600, 400)
-
         self.file_path = None
         self.setAcceptDrops(True)
         layout = QVBoxLayout()
 
         self.label = QLabel("No file selected")
         self.label.setAlignment(QtCore.Qt.AlignCenter)
+        file_font = QFont("Arial", 14, QFont.Weight.Bold)
+        self.label.setFont(file_font)
         layout.addWidget(self.label)
         # Scrollable Results Box
         self.results_box = QTextEdit()
@@ -33,6 +35,8 @@ class SimpleScanner(QWidget):
 
         self.status_label = QLabel("")
         self.status_label.setAlignment(QtCore.Qt.AlignCenter)
+        status_font = QFont("Arial", 10, QFont.Weight.Bold)
+        self.status_label.setFont(status_font)
         layout.addWidget(self.status_label)
 
         button_layout = QHBoxLayout()
