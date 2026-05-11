@@ -2,6 +2,7 @@ import sys
 import os
 import funcs
 import hashlib
+import time
 from PyQt5 import QtCore
 from PyQt5.QtGui import QFont 
 from PyQt5.QtWidgets import (
@@ -9,6 +10,7 @@ from PyQt5.QtWidgets import (
     QPushButton, QLabel, QFileDialog,QTextEdit,QHBoxLayout
 )
 from pathlib import Path
+
 
 
 
@@ -102,6 +104,11 @@ class SimpleScanner(QWidget):
         entropy_formats = [".exe", ".dll", ".ps1", ".bat", ".js", ".vbs", ".txt", ".json"]
         file_hash=self.get_sha256(self.file_path)
         file_info=f"SHA256: {file_hash}<br>"
+        created = time.ctime(os.path.getctime(self.file_path))
+        modified = time.ctime(os.path.getmtime(self.file_path))
+        file_info+=f"""Date created: {created}<br>
+        Last Modified: {modified}<br>
+        """
         file_ext=Path(self.file_path).suffix
         file_info+=f"file type: {str(file_ext)}<br>"
         file_size = round(os.path.getsize(self.file_path)/1000,2)
