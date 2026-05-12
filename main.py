@@ -2,6 +2,7 @@ import sys
 import os
 import funcs
 import hashlib
+import yara
 import time
 from PyQt5 import QtCore
 from PyQt5.QtGui import QFont 
@@ -19,16 +20,36 @@ class SimpleScanner(QWidget):
         super().__init__()
 
         self.setWindowTitle("Simple File Scanner")
-        self.setGeometry(500, 600, 600, 400)
+        self.setGeometry(700, 200, 600, 600)
         self.file_path = None
         self.setAcceptDrops(True)
         layout = QVBoxLayout()
-
-        self.label = QLabel("No file selected")
-        self.label.setAlignment(QtCore.Qt.AlignCenter)
+        self.yara_file="rules.yar"
+        
+       
+        
+        self.yara_label = QLabel(f"YARA file: {self.yara_file}")
+        self.yara_label.setAlignment(QtCore.Qt.AlignCenter)
         file_font = QFont("Arial", 14, QFont.Weight.Bold)
-        self.label.setFont(file_font)
-        layout.addWidget(self.label)
+        self.yara_label.setFont(file_font)
+        layout.addWidget(self.yara_label)
+        
+        yara_buttons_layout = QHBoxLayout()
+        #  Load YARA file button
+        self.load_rules_button = QPushButton("Load YARA File")
+        self.load_rules_button.clicked.connect(self.load_yara_file)
+        self.load_rules_button.setIcon(self.style().standardIcon(QApplication.style().SP_DialogOpenButton))
+        yara_buttons_layout.addWidget(self.load_rules_button)
+        
+        # resets YARA file to defualt
+        self.reset_button = QPushButton("Reset to Default Rules")
+        self.reset_button.clicked.connect(self.reset_yara_file)
+        self.reset_button.setEnabled(False)
+        self.reset_button.setIcon(self.style().standardIcon(QApplication.style().SP_MediaPlay))
+        yara_buttons_layout.addWidget(self.reset_button)
+        
+        layout.addLayout(yara_buttons_layout)
+        
         # Scrollable Results Box
         self.results_box = QTextEdit()
         self.results_box.setReadOnly(True)
@@ -41,21 +62,27 @@ class SimpleScanner(QWidget):
         self.status_label.setFont(status_font)
         layout.addWidget(self.status_label)
 
-        button_layout = QHBoxLayout()
+        self.label = QLabel("No file selected")
+        self.label.setAlignment(QtCore.Qt.AlignCenter)
+        file_font = QFont("Arial", 14, QFont.Weight.Bold)
+        self.label.setFont(file_font)
+        layout.addWidget(self.label)
+        
+        scan_buttons_layout = QHBoxLayout()
         #  Load file button
         self.load_button = QPushButton("Load File")
         self.load_button.clicked.connect(self.load_file)
         self.load_button.setIcon(self.style().standardIcon(QApplication.style().SP_DialogOpenButton))
-        button_layout.addWidget(self.load_button)
+        scan_buttons_layout.addWidget(self.load_button)
         
         # Scan button
         self.scan_button = QPushButton("Scan")
         self.scan_button.clicked.connect(self.scan_file)
         self.scan_button.setEnabled(False)
         self.scan_button.setIcon(self.style().standardIcon(QApplication.style().SP_MediaPlay))
-        button_layout.addWidget(self.scan_button)
+        scan_buttons_layout.addWidget(self.scan_button)
         
-        layout.addLayout(button_layout)
+        layout.addLayout(scan_buttons_layout)
         self.setLayout(layout)
         
   
@@ -93,6 +120,20 @@ class SimpleScanner(QWidget):
             self.label.setText(f"Loaded: {os.path.basename(file_path)}")
             self.label.setToolTip(self.file_path)
             self.scan_button.setEnabled(True)
+    def load_yara_file(self):
+        file_path, _ = QFileDialog.getOpenFileName(self, "Select File")
+        try:
+            rules=yara.compile(file_path)
+            self.yara_file = file_path
+            self.yara_label.setText(f"YARA file: {os.path.basename(file_path)}")
+            self.yara_label.setToolTip(self.yara_file)
+            self.reset_button.setEnabled(True)
+        except:
+            self.yara_label.setText(f"New YARA file not Valid. YARA file: {os.path.basename(self.yara_file)}")
+    def reset_yara_file(self):
+        self.yara_file="rules.yar"
+        self.reset_button.setEnabled(False)
+        self.yara_label.setText(f"Yara file: {os.path.basename(self.yara_file)}")
     def scan_file(self):
         if not self.file_path:
             self.label.setText("No file selected!")
@@ -120,7 +161,7 @@ class SimpleScanner(QWidget):
             # color codes entropy severity
             file_info = self.color_severity(file_info)
         
-        scan=funcs.yara_check(self.file_path)
+        scan=funcs.yara_check(self.file_path,self.yara_file)
         scan_output=f"<h3>{len(scan)} detections</h3><br>"
         scan_output+=funcs.yara_to_string(scan)
         

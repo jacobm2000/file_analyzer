@@ -113,11 +113,11 @@ def yara_to_string(scan):
     
     
     return output
-def yara_check(file_path):
+def yara_check(file_path,rules):
     matches_found = []
 
     # Load YARA rules
-    rules = yara.compile(filepath="rules.yar")
+    rules = yara.compile(rules)
 
     # Scan file
     matches = rules.match(file_path)
