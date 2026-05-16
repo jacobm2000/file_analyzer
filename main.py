@@ -162,7 +162,7 @@ class SimpleScanner(QWidget):
             file_info = self.color_severity(file_info)
         
         scan=funcs.yara_check(self.file_path,self.yara_file)
-        scan_output=f"<h3>{len(scan)} detections</h3><br>"
+        scan_output=f"<h2>{len(scan)} detections</h2><br>"
         scan_output+=funcs.yara_to_string(scan)
         
         # color codes severity
@@ -170,19 +170,19 @@ class SimpleScanner(QWidget):
     
         
         self.results_box.setHtml(f"""
-        <p style="font-size:16px; font-weight:bold; text-decoration: underline; text-align:center;">
+        <p style="font-size:18px; font-weight:bold; text-decoration: underline; text-align:center;">
         File Info
         </p>
         
-        <p style="font-size:12px; text-align:center;">
+        <p style="font-size:14px; text-align:center;">
         {file_info}
         </p>
         
-         <p style="font-size:16px; font-weight:bold; text-decoration: underline; text-align:center;">
+         <p style="font-size:18px; font-weight:bold; text-decoration: underline; text-align:center;">
         File Analysis
         </p>
         
-        <p style="font-size:12px; text-align:center;">
+        <p style="font-size:14px; text-align:center;">
         {scan_output}
         </p>
         """
