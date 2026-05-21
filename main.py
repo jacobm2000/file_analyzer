@@ -62,11 +62,7 @@ class SimpleScanner(QWidget):
         self.status_label.setFont(status_font)
         layout.addWidget(self.status_label)
 
-        self.label = QLabel("No file selected")
-        self.label.setAlignment(QtCore.Qt.AlignCenter)
-        file_font = QFont("Arial", 14, QFont.Weight.Bold)
-        self.label.setFont(file_font)
-        layout.addWidget(self.label)
+      
         
         scan_buttons_layout = QHBoxLayout()
         #  Load file button
@@ -85,6 +81,11 @@ class SimpleScanner(QWidget):
         layout.addLayout(scan_buttons_layout)
         self.setLayout(layout)
         
+        self.label = QLabel("No file selected")
+        self.label.setAlignment(QtCore.Qt.AlignCenter)
+        file_font = QFont("Arial", 14, QFont.Weight.Bold)
+        self.label.setFont(file_font)
+        layout.addWidget(self.label)
   
         
     def dragEnterEvent(self, event):
