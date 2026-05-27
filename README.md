@@ -16,9 +16,6 @@ A lightweight easy to use Python-based file analysis tool that uses **YARA rules
 ---
 
 ## Demo Screenshot
-
-> Replace this image with your own screenshot
-
 ![Demo Screenshot](screenshot.jpg)
 
 ---
