@@ -1,6 +1,6 @@
-# Simple File Scanner
+#File Analyzer
 
-A lightweight Python-based file analysis tool that uses **YARA rules** to detect suspicious or potentially malicious files.
+A lightweight easy to use Python-based file analysis tool that uses **YARA rules** to detect suspicious or potentially malicious files.
 
 ---
 
@@ -12,7 +12,7 @@ A lightweight Python-based file analysis tool that uses **YARA rules** to detect
 - SHA256 hash generation
 - File metadata display
 - Simple and clean graphical interface
-
+  
 ---
 
 ## Demo Screenshot
