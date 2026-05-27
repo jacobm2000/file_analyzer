@@ -1,4 +1,4 @@
-#File Analyzer
+# File Analyzer
 
 A lightweight easy to use Python-based file analysis tool that uses **YARA rules** to detect suspicious or potentially malicious files.
 
